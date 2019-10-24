@@ -17,7 +17,7 @@ class Event {
     }
 
     insertEvent() {
-        console.log(this.title);
+
         let sql = `INSERT INTO events(title, date, location, description, type, price, created_at, is_invoice) \
                    VALUES('${this.title}','${this.date}','${this.location}','${this.descp}','${this.type}','${this.price}','${this.created_at}', ${this.is_invoice})`;
         return sql;
@@ -62,8 +62,13 @@ class Event {
         return sql;
     }
 
+    static getEventInfo(id){
+        let sql = `SELECT title,location,date FROM events WHERE id = ${id}`;
+        return sql;
+    }
+
     static getEventSong(id) {
-        let sql = `SELECT * FROM events_songs WHERE event_id = ${id}`;
+        let sql = `SELECT events_songs.song_id,songs.title FROM events_songs,songs WHERE events_songs.event_id = ${id} AND events_songs.song_id=songs.id`;
         return sql;
     }
 

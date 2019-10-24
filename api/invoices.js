@@ -6,6 +6,7 @@ var Invoice = require('../domain/invoice');
 var Event = require('../domain/event');
 var mysql = require('mysql');
 
+
 const router = express.Router();
 
 //handles url http://localhost:6001/invoices/add
@@ -14,31 +15,49 @@ router.post("/add", async (req, res, next) => {
     let event_id = req.body.id;
     let error = false;
     let songList = [];
+    let json_data = {};
+
+
+
     if (event_id != null) {
+        let event_details = {}
+
+        let event_info = await getEventInfo(event_id);
+        event_details['title'] = event_info[0]['title'];
+        event_details['location'] = event_info[0]['location'];
+        event_details['date'] = DATE_FORMATER(event_info[0]['date'],"yyyy-mm-dd");
 
         songList = await getEventSongs(event_id);
         console.log(songList);
 
         let artistPrice = await getEventArtistPrice(event_id);
-        console.log(artistPrice);
 
         if (songList != null && songList.length > 0) {
-            let songIdList = [];
-            songList.forEach(function (node) {
-                songIdList.push(node["song_id"]);
-            });
 
             let final_commision = 0;
             let final_total = 0;
-            let invoiceId = await getInvoiceId(event_id);
+            let date = DATE_FORMATER( new Date(), "yyyy-mm-dd HH:MM:ss" );
+            let invoiceId = await getInvoiceId(event_id,date);
+            json_data['id'] = invoiceId;
+            json_data['date'] = DATE_FORMATER(date, "yyyy-mm-dd" );
+            json_data['event'] = event_details;
 
-            for (let i = 0; i < songIdList.length; i++) {
-                let songId = songIdList[i];
+            let song_data = []
+
+            for (let i = 0; i < songList.length; i++) {
+                let song_data_block = {}
+                let songId = songList[i]['song_id'];
+                let songTitle = songList[i]['title'];
+                song_data_block['id'] = songId;
+                song_data_block['title'] = songTitle;
                 let invoiceSongId = await getInvoiceSongId(invoiceId, songId);
                 let song_commission = 0;
                 let song_total = 0;
                 let lyricistIds = await getArtistId(songId, 2);
                 let composerIds = await getArtistId(songId, 3);
+                song_data_block['lyricist'] = lyricistIds;
+                song_data_block['composer'] = composerIds;
+
 
                 if (lyricistIds != null && lyricistIds.length > 0) {
                     let commission = 0;
@@ -48,7 +67,7 @@ router.post("/add", async (req, res, next) => {
                         total += artistPrice;
                         commission += artistPrice * 0.1;
                         royalty = total - commission;
-                        console.log(lyricistIds[0]['artist_id']);
+
                         await addInvoiceSongArtist(invoiceSongId, lyricistIds[0]['artist_id'], royalty, commission, total);
                         // add song invoice and finals
                     } else {
@@ -100,10 +119,14 @@ router.post("/add", async (req, res, next) => {
                     song_total += total;
 
                 }
+                song_data_block['total'] = song_total;
+                song_data.push(song_data_block)
                 await updateInvoiceSong(invoiceSongId, song_commission, song_total);
                 final_commision += song_commission;
                 final_total += song_total;
             }
+            json_data['songs'] = song_data;
+            json_data['total'] = final_total;
             await updateInvoice(invoiceId, final_commision, final_total);
 
         } else {
@@ -119,7 +142,8 @@ router.post("/add", async (req, res, next) => {
         });
     } else {
         res.status(200).json({
-            message: "invoice inserted."
+            message: "invoice inserted.",
+            data: json_data
         });
     }
 
@@ -146,22 +170,25 @@ async function getEventSongs(id) {
 
 }
 
-async function getInvoiceId(id) {
-    let data = await util_db.query(Invoice.insertNullInvoice(id));
-    console.log('invoice_Id : ',data.insertId);
+async function getEventInfo(id) {
+    let data = await util_db.query(Event.getEventInfo(id));
+    let result = JSON.parse(JSON.stringify(data));
+    return result;
+}
+
+async function getInvoiceId(id,date) {
+    let data = await util_db.query(Invoice.insertNullInvoice(id,date));
     return data.insertId;
 }
 
 async function getInvoiceSongId(invoice_id, song_id) {
     let data = await util_db.query(Invoice.insertNullInvoiceSong(invoice_id, song_id));
-    console.log('invoice_Song_Id : ',data.insertId);
     return data.insertId;
 }
 
 async function getArtistId(song_id, type) {
     let data = await util_db.query(Invoice.getArtists(song_id, type));
     data = JSON.parse(JSON.stringify(data));
-    console.log('Artists : ',data);
     return data;
 }
 

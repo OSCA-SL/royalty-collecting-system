@@ -3,8 +3,8 @@ const DATE_FORMATER = require( 'dateformat' );
 
 class Invoice {
 
-    static insertNullInvoice(event_id) {
-        let date = DATE_FORMATER( new Date(), "yyyy-mm-dd HH:MM:ss" );
+    static insertNullInvoice(event_id, date) {
+
         let sql = `INSERT INTO invoices(event_id, date, commission, total, status) VALUES \ 
         ('${event_id}', '${date}', ${0}, ${0}, ${1})`;
         return sql;
@@ -17,7 +17,7 @@ class Invoice {
     }
 
     static getArtists(song_id, type) {
-        let sql = `SELECT artist_id FROM song_artists WHERE song_id = ${song_id} AND type = ${type}`;
+        let sql = `SELECT song_artists.artist_id,users.first_name,users.last_name FROM song_artists,artists,users WHERE song_artists.song_id = ${song_id} AND song_artists.type = ${type} AND song_artists.artist_id=artists.id AND artists.user_id=users.id`;
         return sql;
     }
 
@@ -25,7 +25,6 @@ class Invoice {
         let sql = `UPDATE invoices SET\
                   commission = ${commission}, total = ${total} \
                   WHERE id = ${invoice_id}`;
-        console.log(sql);
         return sql;
     }
 
