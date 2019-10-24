@@ -1,0 +1,131 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[left=3cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{setspace}
+\usepackage[none]{hyphenat}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{dirtytalk}
+\usepackage{float}
+
+\title{System Requirements Specification Document}
+\author{Cape Weaver Solutions}
+\onehalfspacing
+\sloppy
+
+\begin{document}
+
+\begin{titlepage}    
+    \center
+    \setstretch{2.5}
+    { \LARGE Royalty Collecting System}\\[0.5cm]
+    { \LARGE \bfseries System Requirements Specification Document}\\[9.5cm]
+    \setstretch{1.5}
+    \includegraphics[scale=0.1]{logo}\\
+    \Large Cape Weaver Solutions\\
+    \Large July 2019\\[5cm]
+    
+    \small Submitted in agreement of the\\
+    \small Royalty Collecting System for\\
+    \small Outstanding Song Creators Association - Sri Lanka   
+\end{titlepage}
+
+\pagenumbering{roman}
+\doublespacing
+\renewcommand\contentsname{\center Table of Contents\\[1cm]}
+\tableofcontents
+
+\clearpage
+\onehalfspacing
+\section{Introduction}
+\pagenumbering{arabic}
+\vspace{12pt}
+
+This is a project from \textbf{Cape Weaver Solutions} to build a \textbf{Royalty Collecting System} for \textbf{Outstanding Song Creators Association}.
+This document consists of a brief description of the project, high level feature specification and the client agreement details of
+Cape Weaver Solutions.
+\vspace{12pt}
+
+\section{Requirement Specification}
+\vspace{12pt}
+\subsection{Purpose}
+\vspace{12pt}
+
+The purpose of this project is to build a Royalty collecting system to manage royalty payments of artistes for musical events.
+Royalty payments are collected for artists who are members of the OSCA when their creations are used in any way in musical events.
+\vspace{12pt}
+
+Currently this process is done manually by osca which is a very time consuming task.
+The authorized person has to prepare a list of all the songs which are used in a particular event and calculate payments according to artistes.
+\vspace{12pt}
+
+The main objective of this system is to improve the efficiency and the accuracy of the royalty collecting process and also to generate monthly reports of payments.
+\vspace{12pt}
+
+\subsection{Project Scope}
+\vspace{12pt}
+
+This system solution will give the ability to create musical events by adding its songs and then calculating royalty payments for the respective member artistes of OSCA.
+Also the system will generate reports of monthly payments per artist and the overall royalty collection of OSCA per month.
+\vspace{12pt}
+
+\clearpage
+
+\section{System Specification}
+\vspace{12pt}
+
+\subsection{Project Deliverables}
+\vspace{12pt}
+
+The system consists of two main parts, which are backend service and the front-end. The backend will provide the services to retrieve song information and to store payment information.
+The front-end will provide the following features,
+\begin{itemize}
+    \item Create an event with details
+    \item Add songlist of the event
+    \item Select payment criteria for each event
+    \item Generate calculated royalty payment amounts for each event
+    \item Generate monthly reports for payments
+\end{itemize}
+\vspace{12pt}
+
+
+\subsection{Project assumptions}
+\vspace{12pt}
+
+\begin{itemize}
+    \item This system is only for the authorized users of OSCA with admin access
+    \item Songs which are in the OSCA database can only be added to event song lists
+    \item Royalty payments are calculated only for artistes who are members of the OSCA
+\end{itemize}
+\vspace{12pt}
+
+\subsection{Project Plan}
+\vspace{12pt}
+
+The development of the system will commence from the \textbf{3rd of July 2019 upto 02 months}.
+Testing period will commence from the \textbf{3rd of September 2019} and the final system will be delivered for client usage on \textbf{3rd of October 2019}.
+\vspace{12pt}
+
+\clearpage
+\section{Product Specification}
+\vspace{12pt}
+
+\subsection{Licence Protocol}
+\vspace{12pt}
+
+\begin{itemize}
+    \item This product will be implemented based on the requirements of OSCA.
+    \item This product will be open source and free whereas the complete source code will be available for future developments.
+    \item Cape Weaver solutions are entitled for this project during the development phase only.
+\end{itemize}
+\vspace{12pt}
+
+
+
+\subsection{Product Support Plan}
+\vspace{12pt}
+
+Cape Weaver Solutions will provide software maintenance and support \textbf{only for 30 days from the delivery date of the system}.
+\vspace{12pt}
+
+\end{document}
